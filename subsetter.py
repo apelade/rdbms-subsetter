@@ -228,7 +228,7 @@ class Db(object):
         if self.args.yes:
             return True
         response = input("Proceed? (Y/n) ").strip().lower()
-        if response is not 'y':
+        if response != 'y':
             self.conn.close()
             sys.exit()
         else:
