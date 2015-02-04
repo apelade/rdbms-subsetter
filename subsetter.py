@@ -58,6 +58,7 @@ supported).
 Case-specific table names will probably create bad results in rdbms-subsetter,
 and in the rest of your life, for that matter.  Don't do it.
 """
+import sys
 import argparse
 import logging
 from collections import OrderedDict, deque
@@ -227,7 +228,11 @@ class Db(object):
         if self.args.yes:
             return True
         response = input("Proceed? (Y/n) ").strip().lower()
-        return (not response) or (response[0] == 'y')
+        if response is not 'y':
+            self.conn.close()
+            sys.exit()
+        else:
+            return True
 
 
     def create_row_in(self, source_row, target_db, target, prioritized=False):
