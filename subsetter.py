@@ -76,10 +76,10 @@ def _find_n_rows(self, estimate=False):
             if self.db.engine.driver in ('psycopg2', 'pg8000',):
                 schema = (self.schema + '.') if self.schema else ''
                 qry = """SELECT reltuples FROM pg_class
-	                 WHERE oid = lower('%s%s')::regclass""" % (schema, self.name.lower())
+                        WHERE oid = lower('%s%s')::regclass""" % (schema, self.name.lower())
             elif 'oracle' in self.db.engine.driver:
                 qry = """SELECT num_rows FROM all_tables
-	                 WHERE LOWER(table_name)='%s'""" % self.name.lower()
+                        WHERE LOWER(table_name)='%s'""" % self.name.lower()
             else:
                 raise NotImplementedError("No approximation known for driver %s"
                                           % self.db.engine.driver)
@@ -94,6 +94,8 @@ def _random_row_func(self):
     dialect = self.bind.engine.dialect.name
     if 'mysql' in dialect:
         return sa.sql.func.rand()
+    if 'mssql' in dialect:
+        return sa.sql.func.rand()        
     elif 'oracle' in dialect:
         return sa.sql.func.dbms_random.value()
     else:
